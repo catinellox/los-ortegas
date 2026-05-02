@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Los Ortegas">
+<meta name="theme-color" content="#000000">
+<title>Los Ortegas — Bass Settings</title>
+<style>
+:root{--red:#a93226;--purple-hdr:#2d1c4a;--purple-body:#1a0f2e;--purple-txt:#c4a8f0;--purple-ring:#7b5ab5;--black-hdr:#111;--black-body:#080808;--black-txt:#cccccc;--black-ring:#555;--gold-hdr:#3d2800;--gold-body:#251800;--gold-txt:#e8b84b;--gold-ring:#9a6800;--blue-hdr:#1a2e4a;--blue-body:#0f1e33;--blue-txt:#7ab8f0;--blue-ring:#2a7acc;--gray-hdr:#2a2a2a;--gray-body:#1a1a1a;--gray-txt:#cccccc;--gray-ring:#666;--yell-hdr:#2e2a00;--yell-body:#1c1900;--yell-txt:#d4c44a;--yell-ring:#8a7a00;--grn-hdr:#1a2e1a;--grn-body:#0f1f0f;--grn-txt:#7acf7a;--grn-ring:#2d8a2d}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+.app{max-width:480px;margin:0 auto;padding-bottom:24px}
+.header{background:#000;padding:12px 16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #1a1a1a;position:sticky;top:0;z-index:10}
+.header img{width:80px;height:80px;object-fit:contain;display:block}
+.header-sub{font-size:10px;color:#555;letter-spacing:3px;margin-top:4px;text-transform:uppercase}
+.body-pad{padding:14px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab{flex:1;padding:9px;text-align:center;border-radius:8px;border:0.5px solid #333;font-size:12px;font-weight:600;cursor:pointer;background:#111;color:#777;letter-spacing:1px;transition:all .15s}
+.tab.active{background:var(--red);border-color:var(--red);color:#fff}
+.song-list{display:flex;flex-direction:column;gap:6px}
+.song-btn{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;border:0.5px solid #222;background:#111;cursor:pointer;text-align:left;-webkit-user-select:none}
+.song-btn:active{background:#1a1a1a}
+.song-num{font-size:11px;color:#444;min-width:20px}
+.song-info{flex:1;min-width:0}
+.song-name{font-size:14px;font-weight:500;color:#e0e0e0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-author{font-size:10px;color:#555;margin-top:2px}
+.song-badges{display:flex;gap:4px;flex-shrink:0}
+.bt{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap}
+.drop-e{background:#7a1a1a;color:#ffaaaa}
+.drop-d{background:#1a3a7a;color:#aaccff}
+.drop-c{background:#1a5a1a;color:#aaffaa}
+.squier{background:#3a1a6a;color:#ccaaff}
+.yamaha{background:#111;color:#aaa;border:0.5px solid #444}
+.config-panel{display:none}
+.config-panel.open{display:block}
+.cfg-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.cfg-title{font-size:15px;font-weight:600;color:#e0e0e0}
+.cfg-author{font-size:11px;color:#555;margin-bottom:12px}
+.back-btn{font-size:12px;color:#777;cursor:pointer;padding:6px 12px;border:0.5px solid #333;border-radius:8px;background:#111}
+.back-btn:active{background:#1a1a1a}
+.eq-block{border-radius:12px;border:0.5px solid #222;margin-bottom:10px;overflow:hidden}
+.eq-hdr{padding:8px 14px;display:flex;align-items:center;justify-content:space-between}
+.eq-title{font-size:11px;font-weight:600;letter-spacing:1px}
+.eq-body{padding:12px 14px}
+.pill{font-size:9px;padding:3px 8px;border-radius:10px;font-weight:600}
+.p-on{background:#1a4a1a;color:#6acf6a}
+.p-byp{background:#2a2a2a;color:#666}
+.bs .eq-hdr{background:var(--purple-hdr)}.bs .eq-title{color:var(--purple-txt)}.bs .eq-body{background:var(--purple-body)}.bs .kv{color:var(--purple-txt)}
+.by .eq-hdr{background:var(--black-hdr)}.by .eq-title{color:var(--black-txt)}.by .eq-body{background:var(--black-body)}.by .kv{color:var(--black-txt)}
+.ba .eq-hdr{background:var(--gold-hdr)}.ba .eq-title{color:var(--gold-txt)}.ba .eq-body{background:var(--gold-body)}.ba .kv{color:var(--gold-txt)}
+.bc .eq-hdr{background:var(--blue-hdr)}.bc .eq-title{color:var(--blue-txt)}.bc .eq-body{background:var(--blue-body)}.bc .kv{color:var(--blue-txt)}
+.bm .eq-hdr{background:var(--gray-hdr)}.bm .eq-title{color:var(--gray-txt)}.bm .eq-body{background:var(--gray-body)}.bm .kv{color:var(--gray-txt)}
+.bh .eq-hdr{background:var(--yell-hdr)}.bh .eq-title{color:var(--yell-txt)}.bh .eq-body{background:var(--yell-body)}.bh .kv{color:var(--yell-txt)}
+.bj .eq-hdr{background:var(--grn-hdr)}.bj .eq-title{color:var(--grn-txt)}.bj .eq-body{background:var(--grn-body)}.bj .kv{color:var(--grn-txt)}
+.knobs{display:flex;gap:8px;flex-wrap:wrap}
+.ki{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:48px}
+.kl{font-size:9px;color:#444;letter-spacing:.5px}
+.kv{font-size:12px;font-weight:600}
+.db-row{display:flex;gap:8px;margin-bottom:10px}
+.db{flex:1;padding:5px 0;text-align:center;border-radius:8px;font-size:10px;font-weight:600;border:.5px solid}
+.db-on{background:#1a4a1a;color:#6acf6a;border-color:#2d6e2d}
+.db-off{background:#141414;color:#444;border-color:#2a2a2a}
+.lev{font-size:9px;padding:3px 8px;border-radius:10px;background:#1a1a1a;color:#999;font-weight:600;border:.5px solid #333}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <img src="data:image/png;base64,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" alt="Los Ortegas">
+    <div><div class="header-sub">Bass Settings</div></div>
+  </div>
+  <div class="body-pad">
+    <div id="songView">
+      <div class="tabs">
+        <div class="tab active" onclick="sw(1)">SETLIST 1</div>
+        <div class="tab" onclick="sw(2)">SETLIST 2</div>
+      </div>
+      <div class="song-list" id="songList"></div>
+    </div>
+    <div class="config-panel" id="cfgPanel">
+      <div class="cfg-hdr">
+        <button class="back-btn" onclick="goBack()">← Volver</button>
+        <div class="cfg-title" id="cfgTitle"></div>
+      </div>
+      <div class="cfg-author" id="cfgAuthor"></div>
+      <div id="cfgContent"></div>
+    </div>
+  </div>
+</div>
+<script>
+const SL={1:[
+
+// 1. PRIDE AND JOY — Stevie Ray Vaughan
+// Blues Texas clásico: mástil puro, oscuro y cálido, compresor suave, sin drive
+{name:"Pride And Joy",author:"Stevie Ray Vaughan",tuning:"Drop E",bass:"Squier JB",
+ squier:{mast:10,puen:0,tono:3},
+ amp:{gain:5,bass:8,mid:5,treb:3,deep:true,bright:false},
+ cs3:{lvl:5,tone:4,atk:4,sus:6,on:true},
+ mxr:{cln:8,vol:5,tone:5,drv:2,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 2. SHE RIDES — Danzig (versión oscura doom/punk, NO rockabilly)
+// Muy grave, oscuro, drive sucio, sin treble, Deep ON
+{name:"She Rides",author:"Danzig",tuning:"Drop E",bass:"Squier JB",
+ squier:{mast:10,puen:2,tono:2},
+ amp:{gain:6,bass:9,mid:6,treb:2,deep:true,bright:false},
+ cs3:{lvl:5,tone:4,atk:5,sus:6,on:true},
+ mxr:{cln:3,vol:5,tone:4,drv:6,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 3. ME GUSTAS MUCHO — Las Viejas Locas
+// Punk argentino energético: puente, attack máximo, mid alto, sucio
+{name:"Me Gustas Mucho",author:"Las Viejas Locas",tuning:"Drop E",bass:"Squier JB",
+ squier:{mast:3,puen:10,tono:9},
+ amp:{gain:7,bass:5,mid:9,treb:7,deep:false,bright:true},
+ cs3:{lvl:5,tone:6,atk:9,sus:4,on:true},
+ mxr:{cln:4,vol:5,tone:5,drv:6,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 4. PARAMAR — Los Ortegas
+// Tema propio, equilibrado, mid alto, sin overdrive
+{name:"Paramar",author:"Los Prisioneros",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:7,lev:"NECK"},
+ amp:{gain:4,bass:6,mid:7,treb:6,deep:false,bright:true},
+ cs3:{lvl:5,tone:5,atk:5,sus:5,on:true},
+ mxr:{cln:7,vol:5,tone:5,drv:0,on:false},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 5. BLITZKRIEG BOP — Ramones
+// Punk directo y seco: neck, mid explosivo, attack máximo, leve drive
+{name:"Blitzkrieg Bop",author:"Ramones",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"NECK"},
+ amp:{gain:5,bass:6,mid:9,treb:7,deep:false,bright:true},
+ cs3:{lvl:5,tone:5,atk:9,sus:5,on:true},
+ mxr:{cln:5,vol:5,tone:5,drv:3,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 6. UN BESO Y UNA FLOR — Los Mox (versión punk rock chilena, más agresiva)
+// Rock/punk: gain alto, mid alto, drive presente, no balada
+{name:"Un Beso Y Una Flor",author:"Los Mox",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:8,lev:"BOTH"},
+ amp:{gain:7,bass:6,mid:8,treb:6,deep:false,bright:true},
+ cs3:{lvl:5,tone:5,atk:6,sus:5,on:true},
+ mxr:{cln:4,vol:5,tone:5,drv:6,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 7. REPTILIA — The Strokes
+// Indie rock sucio: bridge, overdrive medio, mid alto, treble presente
+{name:"Reptilia",author:"The Strokes",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"BRIDGE"},
+ amp:{gain:6,bass:6,mid:9,treb:8,deep:false,bright:true},
+ cs3:{lvl:5,tone:5,atk:5,sus:5,on:true},
+ mxr:{cln:3,vol:5,tone:7,drv:6,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 8. LIKE A STONE — Audioslave
+// Rock pesado melódico: limpio con delay ambiental, graves profundos
+{name:"Like A Stone",author:"Audioslave",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:5,lev:"NECK"},
+ amp:{gain:5,bass:7,mid:5,treb:4,deep:true,bright:false},
+ cs3:{lvl:5,tone:5,atk:5,sus:5,on:true},
+ mxr:{cln:5,vol:5,tone:5,drv:0,on:false},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:5,mix:6,rep:4,on:true}},
+
+// 9. FOR WHOM THE BELL TOLLS — Metallica
+// Heavy clásico: bajos extremos, treble alto, Hartke refuerza el sub
+{name:"For Whom The Bell Tolls",author:"Metallica",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"NECK"},
+ amp:{gain:5,bass:9,mid:4,treb:8,deep:true,bright:true},
+ cs3:{lvl:5,tone:5,atk:5,sus:5,on:true},
+ mxr:{cln:5,vol:5,tone:5,drv:0,on:false},
+ hartke:{lvl:5,gain:8,mid:5,tone:5,on:true},
+ joyo:{time:0,mix:0,rep:0,on:false}}
+
+],2:[
+
+// 1. HOOCHIE COOCHIE MAN — Muddy Waters
+// Chicago blues: mástil oscuro, muy grave, sin brillo, limpio con compresión
+{name:"Hoochie Coochie Man",author:"Muddy Waters",tuning:"Drop E",bass:"Squier JB",
+ squier:{mast:10,puen:0,tono:2},
+ amp:{gain:4,bass:8,mid:5,treb:3,deep:true,bright:false},
+ cs3:{lvl:5,tone:4,atk:3,sus:5,on:true},
+ mxr:{cln:5,vol:5,tone:5,drv:0,on:false},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 2. LA GRANGE — ZZ Top
+// Blues rock boogie: mezcla cuerdas, drive leve, groove en mid
+{name:"La Grange",author:"ZZ Top",tuning:"Drop E",bass:"Squier JB",
+ squier:{mast:10,puen:5,tono:5},
+ amp:{gain:5,bass:7,mid:7,treb:4,deep:true,bright:false},
+ cs3:{lvl:5,tone:5,atk:6,sus:5,on:true},
+ mxr:{cln:7,vol:5,tone:5,drv:3,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 3. I WANNA BE SEDATED — Ramones
+// Punk directo: neck, attack fuerte, drive leve, bright
+{name:"I Wanna Be Sedated",author:"Ramones",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"NECK"},
+ amp:{gain:5,bass:6,mid:6,treb:6,deep:false,bright:true},
+ cs3:{lvl:5,tone:6,atk:8,sus:4,on:true},
+ mxr:{cln:8,vol:5,tone:5,drv:2,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 4. NO OBSTANTE LO CUAL — Riff (heavy metal argentino)
+// Distorsión fuerte, mid explosivo, graves contundentes, ataque rápido
+{name:"No Obstante Lo Cual",author:"Riff",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:8,lev:"BOTH"},
+ amp:{gain:7,bass:7,mid:9,treb:5,deep:true,bright:false},
+ cs3:{lvl:5,tone:5,atk:8,sus:5,on:true},
+ mxr:{cln:4,vol:5,tone:5,drv:7,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 5. BLOOD AND TEARS — Danzig (doom/dark, no Blood Sweat & Tears)
+// Muy oscuro y pesado: bass máximo, treble mínimo, sin delay, drive oscuro
+{name:"Blood And Tears",author:"Danzig",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:3,lev:"NECK"},
+ amp:{gain:6,bass:9,mid:5,treb:3,deep:true,bright:false},
+ cs3:{lvl:5,tone:4,atk:5,sus:6,on:true},
+ mxr:{cln:3,vol:5,tone:4,drv:5,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 6. MOTHER — Danzig (doom rock oscuro)
+// Grave y saturado: drive alto, CLN bajo, tono oscuro
+{name:"Mother",author:"Danzig",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"BRIDGE"},
+ amp:{gain:6,bass:6,mid:7,treb:6,deep:true,bright:false},
+ cs3:{lvl:5,tone:5,atk:5,sus:5,on:true},
+ mxr:{cln:4,vol:5,tone:7,drv:6,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 7. LA ESPADA SAGRADA — Riff (heavy metal argentino clásico)
+// Riff es heavy duro: distorsión alta, mid muy alto, attack agresivo, graves
+{name:"La Espada Sagrada",author:"Riff",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"BOTH"},
+ amp:{gain:7,bass:7,mid:9,treb:7,deep:false,bright:true},
+ cs3:{lvl:5,tone:5,atk:8,sus:5,on:true},
+ mxr:{cln:3,vol:5,tone:5,drv:8,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 8. TE VISITARÁ LA MUERTE — OBÚS (heavy metal español, potente y agresivo)
+// OBÚS: metal contundente, mid alto, drive fuerte, treble presente
+{name:"Te Visitará La Muerte",author:"Obús",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"NECK"},
+ amp:{gain:7,bass:7,mid:9,treb:6,deep:true,bright:false},
+ cs3:{lvl:5,tone:5,atk:7,sus:5,on:true},
+ mxr:{cln:4,vol:5,tone:5,drv:7,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 9. EL ARRIERO — Divididos (versión eléctrica argentina, sucia y blues)
+// Divididos: rock crudo, bridge, drive sucio medio-alto, mid alto, groove eléctrico
+{name:"El Arriero",author:"Divididos",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:8,lev:"BRIDGE"},
+ amp:{gain:6,bass:7,mid:8,treb:5,deep:true,bright:false},
+ cs3:{lvl:5,tone:5,atk:6,sus:5,on:true},
+ mxr:{cln:4,vol:5,tone:6,drv:6,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 10. KILLING IN THE NAME — Rage Against The Machine (Drop D)
+// RATM: bajo muy agresivo, mid explosivo, attack máximo, drive fuerte
+{name:"Killing In The Name",author:"Rage Against The Machine",tuning:"Drop D",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"NECK"},
+ amp:{gain:5,bass:8,mid:5,treb:7,deep:false,bright:true},
+ cs3:{lvl:5,tone:5,atk:9,sus:6,on:true},
+ mxr:{cln:5,vol:5,tone:5,drv:4,on:true},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:0,mix:0,rep:0,on:false}},
+
+// 11. LONELY DAY — System of a Down
+// Melódico y pesado: limpio con delay ambiental, graves profundos
+{name:"Lonely Day",author:"System Of A Down",tuning:"Drop E",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:4,lev:"NECK"},
+ amp:{gain:5,bass:7,mid:5,treb:4,deep:true,bright:false},
+ cs3:{lvl:5,tone:5,atk:5,sus:5,on:true},
+ mxr:{cln:5,vol:5,tone:5,drv:0,on:false},
+ hartke:{lvl:5,gain:0,mid:5,tone:5,on:false},
+ joyo:{time:5,mix:5,rep:5,on:true}},
+
+// 12. SUGAR — System of a Down (Drop C)
+// Agresivo y rápido: Hartke refuerza subgraves de Drop C, bright
+{name:"Sugar",author:"System Of A Down",tuning:"Drop C",bass:"Yamaha BB-1024X",
+ yamaha:{vol:10,tono:10,lev:"NECK"},
+ amp:{gain:5,bass:8,mid:4,treb:8,deep:false,bright:true},
+ cs3:{lvl:5,tone:5,atk:5,sus:5,on:true},
+ mxr:{cln:5,vol:5,tone:5,drv:0,on:false},
+ hartke:{lvl:5,gain:8,mid:5,tone:5,on:true},
+ joyo:{time:0,mix:0,rep:0,on:false}}
+
+]};
+
+let csl=1;
+const RINGS={squier:'#7b5ab5',yamaha:'#555',amp:'#9a6800',cs3:'#2a7acc',mxr:'#666',hartke:'#8a7a00',joyo:'#2d8a2d'};
+const TXTS={squier:'#c4a8f0',yamaha:'#cccccc',amp:'#e8b84b',cs3:'#7ab8f0',mxr:'#cccccc',hartke:'#d4c44a',joyo:'#7acf7a'};
+
+function ksvg(v,a,rc){
+  const vv=a?v:0,p=vv/10,sa=-225*Math.PI/180,ea=sa+p*270*Math.PI/180,cx=18,cy=18,r=13;
+  const x1=cx+r*Math.cos(sa),y1=cy+r*Math.sin(sa),x2=cx+r*Math.cos(ea),y2=cy+r*Math.sin(ea);
+  const lg=p>0.999?1:0,bx=cx+r*Math.cos(45*Math.PI/180),by=cy+r*Math.sin(45*Math.PI/180);
+  return`<svg width="44" height="44" viewBox="0 0 36 36"><path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${bx} ${by}" fill="none" stroke="#252525" stroke-width="3.5" stroke-linecap="round"/>${p>0?`<path d="M ${x1} ${y1} A ${r} ${r} 0 ${lg} 1 ${x2} ${y2}" fill="none" stroke="${rc}" stroke-width="3.5" stroke-linecap="round"/>`:''}><circle cx="18" cy="18" r="7.5" fill="#141414"/><line x1="18" y1="18" x2="${18+6*Math.cos(ea)}" y2="${18+6*Math.sin(ea)}" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+}
+function rk(l,v,a,rc,tc){return`<div class="ki"><div class="kl">${l}</div>${ksvg(v,a,rc)}<div class="kv" style="color:${tc}">${a?v:0}</div></div>`}
+
+function rcfg(s){
+  const sq=s.bass==="Squier JB";
+  let h=sq
+    ?`<div class="eq-block bs"><div class="eq-hdr"><span class="eq-title">SQUIER JB</span></div><div class="eq-body"><div class="knobs">${rk('MÁST',s.squier.mast,true,RINGS.squier,TXTS.squier)}${rk('PUEN',s.squier.puen,true,RINGS.squier,TXTS.squier)}${rk('TONO',s.squier.tono,true,RINGS.squier,TXTS.squier)}</div></div></div>`
+    :`<div class="eq-block by"><div class="eq-hdr"><span class="eq-title">YAMAHA BB-1024X</span><span class="lev">${s.yamaha.lev}</span></div><div class="eq-body"><div class="knobs">${rk('VOL',s.yamaha.vol,true,RINGS.yamaha,TXTS.yamaha)}${rk('TONO',s.yamaha.tono,true,RINGS.yamaha,TXTS.yamaha)}</div></div></div>`;
+  const a=s.amp;
+  h+=`<div class="eq-block ba"><div class="eq-hdr"><span class="eq-title">FENDER BASSMAN TV</span></div><div class="eq-body"><div class="db-row"><div class="db ${a.deep?'db-on':'db-off'}">DEEP ${a.deep?'●':'○'}</div><div class="db ${a.bright?'db-on':'db-off'}">BRIGHT ${a.bright?'●':'○'}</div></div><div class="knobs">${rk('GAIN',a.gain,true,RINGS.amp,TXTS.amp)}${rk('BASS',a.bass,true,RINGS.amp,TXTS.amp)}${rk('MID',a.mid,true,RINGS.amp,TXTS.amp)}${rk('TREB',a.treb,true,RINGS.amp,TXTS.amp)}</div></div></div>`;
+  const c=s.cs3;
+  h+=`<div class="eq-block bc"><div class="eq-hdr"><span class="eq-title">BOSS CS-3</span><span class="pill ${c.on?'p-on':'p-byp'}">${c.on?'ON':'BYP'}</span></div><div class="eq-body"><div class="knobs">${rk('LVL',c.lvl,c.on,RINGS.cs3,TXTS.cs3)}${rk('TONE',c.tone,c.on,RINGS.cs3,TXTS.cs3)}${rk('ATK',c.atk,c.on,RINGS.cs3,TXTS.cs3)}${rk('SUS',c.sus,c.on,RINGS.cs3,TXTS.cs3)}</div></div></div>`;
+  const m=s.mxr;
+  h+=`<div class="eq-block bm"><div class="eq-hdr"><span class="eq-title">MXR M89</span><span class="pill ${m.on?'p-on':'p-byp'}">${m.on?'ON':'BYP'}</span></div><div class="eq-body"><div class="knobs">${rk('CLN',m.cln,m.on,RINGS.mxr,TXTS.mxr)}${rk('VOL',m.vol,m.on,RINGS.mxr,TXTS.mxr)}${rk('TONE',m.tone,m.on,RINGS.mxr,TXTS.mxr)}${rk('DRV',m.drv,m.on,RINGS.mxr,TXTS.mxr)}</div></div></div>`;
+  const hk=s.hartke;
+  h+=`<div class="eq-block bh"><div class="eq-hdr"><span class="eq-title">HARTKE HF44</span><span class="pill ${hk.on?'p-on':'p-byp'}">${hk.on?'ON':'BYP'}</span></div><div class="eq-body"><div class="knobs">${rk('LVL',hk.lvl,hk.on,RINGS.hartke,TXTS.hartke)}${rk('GAIN',hk.gain,hk.on,RINGS.hartke,TXTS.hartke)}${rk('MID',hk.mid,hk.on,RINGS.hartke,TXTS.hartke)}${rk('TONE',hk.tone,hk.on,RINGS.hartke,TXTS.hartke)}</div></div></div>`;
+  const j=s.joyo;
+  h+=`<div class="eq-block bj"><div class="eq-hdr"><span class="eq-title">JOYO DELAY</span><span class="pill ${j.on?'p-on':'p-byp'}">${j.on?'ON':'BYP'}</span></div><div class="eq-body"><div class="knobs">${rk('TIME',j.time,j.on,RINGS.joyo,TXTS.joyo)}${rk('MIX',j.mix,j.on,RINGS.joyo,TXTS.joyo)}${rk('REP',j.rep,j.on,RINGS.joyo,TXTS.joyo)}</div></div></div>`;
+  return h;
+}
+
+function tc(t){return t==='Drop E'?'drop-e':t==='Drop D'?'drop-d':'drop-c'}
+function bc(b){return b==='Squier JB'?'squier':'yamaha'}
+function bl(b){return b==='Squier JB'?'SJB':'YBB'}
+
+function rl(){
+  document.getElementById('songList').innerHTML=SL[csl].map((s,i)=>`
+    <div class="song-btn" onclick="os(${i})">
+      <span class="song-num">${i+1}</span>
+      <div class="song-info">
+        <div class="song-name">${s.name}</div>
+        <div class="song-author">${s.author}</div>
+      </div>
+      <div class="song-badges">
+        <span class="bt ${tc(s.tuning)}">${s.tuning}</span>
+        <span class="bt ${bc(s.bass)}">${bl(s.bass)}</span>
+      </div>
+    </div>`).join('');
+}
+
+function sw(n){
+  csl=n;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n-1));
+  rl();
+}
+
+function os(i){
+  const s=SL[csl][i];
+  document.getElementById('songView').style.display='none';
+  document.getElementById('cfgPanel').classList.add('open');
+  document.getElementById('cfgTitle').textContent=s.name;
+  document.getElementById('cfgAuthor').textContent=s.author;
+  document.getElementById('cfgContent').innerHTML=rcfg(s);
+  window.scrollTo(0,0);
+}
+
+function goBack(){
+  document.getElementById('songView').style.display='block';
+  document.getElementById('cfgPanel').classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+rl();
+</script>
+</body>
+</html>
