@@ -407,7 +407,7 @@ function rcfg(s){
   // Ext buttons
   const q=encodeURIComponent(s.name+' '+s.author);
   const tabUrl='https://www.songsterr.com/a/wa/bestMatchForQueryString?s='+encodeURIComponent(s.name)+'&a='+encodeURIComponent(s.author);
-  const letraUrl='https://www.letras.com/busca.php?t='+encodeURIComponent(s.name+' '+s.author);
+  const letraUrl='https://genius.com/search?q='+encodeURIComponent(s.name+' '+s.author);
   h+=`<div class="ext-btns"><a class="ext-btn btn-tab" href="${tabUrl}" target="_blank">🎸 TAB</a><a class="ext-btn btn-letra" href="${letraUrl}" target="_blank">🎤 LETRA</a></div>`;
 
   // Bass
